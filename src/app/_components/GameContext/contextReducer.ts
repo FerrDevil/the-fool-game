@@ -10,6 +10,7 @@ export const reducer = (state: GameState, action : GameStateAction ) : GameState
 			return {
 				...state,
 				deck: newDeck,
+				trumps: newDeck[newDeck.length-1].suit,
 				turn: whoseTurn,
 				localTurn: whoseTurn
 			}
@@ -89,7 +90,16 @@ export const reducer = (state: GameState, action : GameStateAction ) : GameState
 		}
 		case "opponentDefendPhaseEnd": {
 			const playersCard = state.table[state.table.length-1][0]
-			const playedCard: Card = state.opponentsHand.filter(card => card.suit === playersCard.suit && card.value > playersCard.value).reduce((prev, card) => card.value < prev.value ? card: prev, { value: 999} as Card)
+			const playableCards: Card[] = state.opponentsHand.filter(
+				card => card.suit === playersCard.suit && card.value > playersCard.value 
+				|| card.suit === state.trumps && playersCard.suit === state.trumps && card.value > playersCard.value 
+				|| card.suit === state.trumps && playersCard.suit !== state.trumps
+			)
+			const playableNotTrumpCards = playableCards.filter(card => card.suit !== state.trumps)
+			const playedCard = playableNotTrumpCards.length > 0 ?
+					playableNotTrumpCards.reduce((prev, card) => card.value < prev.value ? card: prev, { value: 999} as Card)
+				:	
+				playableCards.filter(card => card.suit === state.trumps).reduce((prev, card) => card.value < prev.value ? card: prev, { value: 999} as Card)
 
 			if (playedCard.value === 999){
 				return {
@@ -134,11 +144,15 @@ export const reducer = (state: GameState, action : GameStateAction ) : GameState
 		} 
 
 		case "opponentAttackPhaseEnd": {
-			const availableCardValues = state.table
-				.flat()
-				.reduce( (prev, card ) => [...prev, card.value], [] as number[] )
-			const playedCard = state.opponentsHand.filter(card => availableCardValues.includes(card.value) || state.table.length === 0).reduce((prev, card) => prev.value > card.value ? card : prev, {value: 999} as Card)
-			console.log(playedCard)
+			const availableCardValues = state.table.flat().reduce( (prev, card ) => [...prev, card.value], [] as number[] )
+			const notTrumpCards = state.opponentsHand.filter(card => card.suit !== state.trumps)
+			const playedCard = state.opponentsHand.filter(card => 
+				notTrumpCards.length > 0 && card.suit !== state.trumps && availableCardValues.includes(card.value) 
+				|| notTrumpCards.length === 0 && availableCardValues.includes(card.value) 
+				|| notTrumpCards.length > 0 && card.suit !== state.trumps && state.table.length === 0 
+				|| notTrumpCards.length === 0 && state.table.length === 0 
+			)
+				.reduce((prev, card) => prev.value > card.value ? card : prev, {value: 999} as Card)
 			if (playedCard.value === 999){
 				return {
 					...state,

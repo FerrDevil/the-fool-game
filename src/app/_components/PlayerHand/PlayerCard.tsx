@@ -8,21 +8,26 @@ import { useGameState } from '../GameContext/hooks';
 
 
 export default function PlayerCard({ card } : { card : Card } ) {
-    const [ { table, turn, localTurn } ]  = useGameState()
+    const [ { table, turn, localTurn, trumps } ]  = useGameState()
 
-    const isPlayable = useMemo(() => (
-        turn === "player" && localTurn === "player" && (
+    const isPlayable = useMemo( () => {
+        const lastOpponentsCard = table.length > 0 ? table![table.length - 1]![0] : {} as Card
+        return (
+            turn === "player" && localTurn === "player" && (
             table
                 .flat()
                 .reduce( (prev, card ) => [...prev, card.value], [] as number[] )
                 .includes(card.value) 
             || table.length === 0
-        ) ||
-        turn === "opponent" && localTurn === "player" && (
-            table![table.length - 1]![0].suit === card.suit && table![table.length - 1]![0].value < card.value
+            ) 
+            ||
+            turn === "opponent" && localTurn === "player" && (
+                lastOpponentsCard.suit === card.suit && lastOpponentsCard.value < card.value
+                || lastOpponentsCard.suit === trumps && card.suit === trumps && lastOpponentsCard.value < card.value 
+                || lastOpponentsCard.suit !== trumps && card.suit === trumps 
+            )
         )
-    ), [card, table])
-    /* console.log(card, turn, localTurn) */
+    }, [card, table])
     const [{isDragging}, dragRef, dragPreviewRef] = useDrag(() => ({
         type: "tableCard",
         item: () =>  isPlayable ? { card } : null,
@@ -39,11 +44,9 @@ export default function PlayerCard({ card } : { card : Card } ) {
             <motion.div
                 ref={dragPreviewRef as unknown as React.LegacyRef<HTMLDivElement>}
                 className={`${isPlayable? "cursor-pointer outline outline-2 outline-green-500": "" }`}
-                /* drag */
                 draggable
                 whileTap={{ scale: 1.1 }}
                 whileHover={{ scale: 1.1 }}
-            /*  whileDrag={{ scale: 1.2 }} */
             >
                 <Image
                     draggable={false}

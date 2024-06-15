@@ -18,7 +18,6 @@ export default function CardPlace({cardPlace} : { cardPlace? : Card[] }) {
             }
             if ( turn === "opponent" && localTurn === "player") {
                 dispatch({type: "playerDefendPhaseEnd", payload: JSON.parse(JSON.stringify(item.card)) })
-               /*  setTimeout(() => { dispatch({type: "opponentAttackPhaseEnd", payload: JSON.parse(JSON.stringify(item.card)) }) } , 1000) */
             }
             
         }

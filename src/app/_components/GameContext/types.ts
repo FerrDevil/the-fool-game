@@ -12,7 +12,7 @@ export type Suit = "diamonds" | "spades" | "hearts" | "clubs"
 
 export type GameState = {
     deck: Card[],
-    trumps: null,
+    trumps: Suit | null,
     turnCount: number,
     turn: "opponent" | "player" | null,
     localTurn: "opponent" | "player" | null,
