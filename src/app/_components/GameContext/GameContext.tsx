@@ -29,7 +29,7 @@ export default function GameContext( { children } : { children?: React.ReactNode
 
     useUpdateEffect(() => {
         if (state.turn === "opponent" && state.localTurn === "opponent") dispatch({type: "opponentAttackPhaseEnd"})
-        if (state.turn === "opponent" && state.localTurn === "player" || state.turn === "player" && state.localTurn === "opponent" ) dispatch({type: "ending"})    
+        dispatch({type: "ending"})    
     }, [state.turn, state.localTurn, state.turnCount])
 
     return (
