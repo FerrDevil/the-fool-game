@@ -173,7 +173,7 @@ export const reducer = (state: GameState, action : GameStateAction ) : GameState
 		} 
 
 		case "ending": {
-			const playedCard: Card = state.table![state.table.length-1]![0] ? state.table![state.table.length-1]![0] : {} as Card
+			const playedCard: Card = state.table.length > 0 ? state.table![state.table.length-1]![0] : {} as Card
 			if (state.deck.length === 0 && state.playersHand.length === 0 && state.opponentsHand.length === 0 ) return {...state, ending: "tie"}
 			else if (state.deck.length === 0 && state.playersHand.length === 0) return {...state, ending: "win"}
 			else if (state.deck.length === 0 && state.opponentsHand.length === 0) return {...state,  ending: "defeat"}
