@@ -25,7 +25,7 @@ export default memo(function OpponentHand()  {
 										width={100}
 										height={200}
 										className={`playersCard`}
-										src={card.path} /* "/cards/cardback.png" */
+										src={"/cards/cardback.png"}
 										alt="card"
 
 									/>
