@@ -244,6 +244,6 @@ export const GAME_STATE: GameState = {
     opponentsHand: [],
     table: [],
     turnCount: 0,
-    defeat: null
+    ending: null
     
 }

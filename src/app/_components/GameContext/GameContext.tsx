@@ -2,7 +2,7 @@
 
 import { createContext, useEffect, useReducer } from 'react'
 import type { GameContextValue } from './types'
-import { GAME_STATE, } from './consts'
+import { GAME_STATE } from './consts'
 
 import useUpdateEffect from '@/app/hooks/useUpdateEffect'
 import { reducer } from './contextReducer'
@@ -12,28 +12,24 @@ import { reducer } from './contextReducer'
 export const gameContext = createContext<GameContextValue | null>(null)
 
 
-
-
-
-
 export default function GameContext( { children } : { children?: React.ReactNode } ) {
     const [state, dispatch] = useReducer(reducer, GAME_STATE)
-    console.log(state)
     
     useEffect(() => {
-        dispatch({type: "start"})
-        setTimeout(() => { dispatch({type: "initialDraw"}) }, 10)
-    }, [])
+        if (state.turnCount === 0){
+            dispatch({type: "start"})
+            setTimeout(() => { dispatch({type: "initialDraw"}) }, 10)
+        }
+        
+    }, [state.turnCount])
 
 	useUpdateEffect(() => {
 		dispatch({type: "newTurn"})
-		
-		
 	}, [state.turnCount])
 
     useUpdateEffect(() => {
         if (state.turn === "opponent" && state.localTurn === "opponent") dispatch({type: "opponentAttackPhaseEnd"})
-        dispatch({type: "defeat"})    
+        if (state.turn === "opponent" && state.localTurn === "player" || state.turn === "player" && state.localTurn === "opponent" ) dispatch({type: "ending"})    
     }, [state.turn, state.localTurn, state.turnCount])
 
     return (

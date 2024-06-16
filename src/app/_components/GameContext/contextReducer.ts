@@ -172,9 +172,11 @@ export const reducer = (state: GameState, action : GameStateAction ) : GameState
 			}
 		} 
 
-		case "defeat": {
-			if (state.deck.length === 0 && state.playersHand.length === 0) return {...state, defeat: false}
-			else if (state.deck.length === 0 && state.opponentsHand.length === 0) return {...state, defeat: true}
+		case "ending": {
+			const playedCard: Card = state.table[state.table.length-1][0] 
+			if (state.deck.length === 0 && state.playersHand.length === 0 && state.opponentsHand.length === 0 ) return {...state, ending: "tie"}
+			else if (state.deck.length === 0 && state.playersHand.length === 0) return {...state, ending: "win"}
+			else if (state.deck.length === 0 && state.opponentsHand.length === 0) return {...state,  ending: "defeat"}
 			else return {...state}
 		}
         case "reset": {

@@ -8,6 +8,7 @@ import PlayerHand from '../PlayerHand/PlayerHand'
 import Table from '../Table/Table'
 import Deck from '../Deck/Deck'
 import EndTurnButton from '../EndTurnButton/EndTurnButton'
+import EndingScreen from '../EndingScreen/EndingScreen'
 
 export default function FoolGame() {
   return (
@@ -19,6 +20,7 @@ export default function FoolGame() {
 					<PlayerHand/>
 					<Deck/>
 					<EndTurnButton/>
+					<EndingScreen/>
 				</div>
 			</DndProvider>
 

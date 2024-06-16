@@ -19,7 +19,7 @@ export type GameState = {
     playersHand: Card[],
     opponentsHand: Card[]
     table: Card[][],
-    defeat: boolean | null
+    ending: "win" | "defeat" | "tie" | null
 }
 
 export type GameStateAction = {type: string, payload?: any}

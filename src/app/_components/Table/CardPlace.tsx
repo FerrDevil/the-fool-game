@@ -7,7 +7,6 @@ import { useGameState } from '../GameContext/hooks'
 
 export default function CardPlace({cardPlace} : { cardPlace? : Card[] }) {
     const [{turn, localTurn}, dispatch] = useGameState()
-    console.log(turn, localTurn)
     const [ _, dropRef ] = useDrop(() => ({
         accept: "tableCard",
         drop: (item: {card : Card}) => {
